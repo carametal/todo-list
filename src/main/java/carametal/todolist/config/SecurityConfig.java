@@ -1,6 +1,5 @@
 package carametal.todolist.config;
 
-import carametal.todolist.repository.UserRepository;
 import carametal.todolist.service.TodolistUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +14,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-  private final UserRepository userRepository;
+  private final TodolistUserDetailsService todolistUserDetailsService;
 
-  public SecurityConfig(UserRepository userRepository) {
-    this.userRepository = userRepository;
+  public SecurityConfig(TodolistUserDetailsService todolistUserDetailsService) {
+    this.todolistUserDetailsService = todolistUserDetailsService;
   }
 
   @Bean
@@ -30,7 +29,7 @@ public class SecurityConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return new TodolistUserDetailsService(userRepository);
+    return todolistUserDetailsService;
   }
 
   @Bean
