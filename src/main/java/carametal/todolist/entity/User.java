@@ -32,7 +32,7 @@ public class User implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return authorities;
+    return List.copyOf(authorities);
   }
 
   @Override
@@ -57,12 +57,20 @@ public class User implements UserDetails {
 
   @Override
   public String getPassword() {
-    return password;
+    return String.valueOf(password);
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   @Override
   public String getUsername() {
-    return username;
+    return String.valueOf(username);
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   public boolean getEnabled() {
