@@ -27,7 +27,7 @@ public class User implements UserDetails {
 
   private boolean enabled;
 
-  @OneToMany(mappedBy = "username")
+  @OneToMany(mappedBy = "id")
   private List<Authority> authorities;
 
   @Override

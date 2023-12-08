@@ -6,19 +6,22 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Data
-@Table(name = "authorities")
+@Table(
+    name = "authorities",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "authority"})})
 public class Authority implements GrantedAuthority {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  String username;
+  private Integer userId;
 
   @Column(length = 60)
   private String authority;
