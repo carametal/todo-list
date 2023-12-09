@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -31,7 +32,11 @@ public class BasicAuthenticationProvider implements AuthenticationProvider {
     logger.debug("username:" + authentication.getName());
     logger.debug("password:" + authentication.getCredentials().toString());
     var user = this.userDetailsService.loadUserByUsername(authentication.getName());
-    return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+    if (passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
+      return new UsernamePasswordAuthenticationToken(
+          user, user.getPassword(), user.getAuthorities());
+    }
+    throw new BadCredentialsException("ユーザー名とパスワードが一致しません。");
   }
 
   @Override
