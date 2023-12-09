@@ -1,8 +1,6 @@
--- https://github.com/spring-projects/spring-security/blob/main/core/src/main/resources/org/springframework/security/core/userdetails/jdbc/users.ddl
 
--- CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- デフォルトユーザースキーマ
 create table users(
 	id serial PRIMARY KEY,
 	username VARCHAR(50) COLLATE "C" UNIQUE NOT NULL,

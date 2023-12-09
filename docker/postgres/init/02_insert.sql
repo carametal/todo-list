@@ -1,8 +1,9 @@
+
 INSERT INTO public.users
 (username, "password", enabled)
 values
-('admin', 'admin', true),
-('user', 'user', true);
+('admin', crypt('admin', gen_salt('bf', 10)), true),
+('user', crypt('admin', gen_salt('bf', 10)), true);
 
 INSERT INTO public.authorities
 (user_id, authority)
