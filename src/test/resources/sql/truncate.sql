@@ -1,1 +1,1 @@
-TRUNCATE TABLE authorities, users RESTART IDENTITY;
+TRUNCATE TABLE authorities, tasks, users RESTART IDENTITY;
