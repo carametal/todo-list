@@ -1,11 +1,18 @@
 import com.github.spotbugs.snom.Effort
 
+buildscript {
+    dependencies {
+        classpath 'org.flywaydb:flyway-database-postgresql:10.2.0'
+    }
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "com.diffplug.spotless" version "6.23.3"
 	id "com.github.spotbugs" version "6.0.2"
+	id "org.flywaydb.flyway" version "10.2.0"
 }
 
 group = 'carametal'
@@ -23,6 +30,13 @@ spotless {
 
 spotbugs {
 	effort = Effort.MAX
+}
+
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/todo_list'
+	user = 'postgres'
+	password = 'postgres'
+	// locations = ['classpath:db/migration']
 }
 
 repositories {
