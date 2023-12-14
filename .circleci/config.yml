@@ -16,7 +16,7 @@ jobs:
       - setup_remote_docker
       - restore_cache:
           keys:
-            - gradle-{{ checksum "build.gradle" }}v
+            - gradle-{{ checksum "build.gradle" }}
       - run:
           name: "Grant execute permission to Gradlew"
           command: "chmod +x ./gradlew"
