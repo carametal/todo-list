@@ -3,6 +3,7 @@ package carametal.todolist.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import carametal.todolist.AbstractDbTest;
 import jakarta.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @Sql(
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD,
     scripts = {"classpath:sql/truncate.sql"})
-public class HelloWorldControllerTest {
+public class HelloWorldControllerTest extends AbstractDbTest {
 
   @Autowired private MockMvc mockMvc;
   public static final String URI = "/hello-world";
