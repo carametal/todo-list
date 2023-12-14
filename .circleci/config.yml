@@ -13,6 +13,7 @@ jobs:
     
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: "Grant execute permission to Gradlew"
           command: "chmod +x ./gradlew"
