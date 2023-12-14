@@ -1,0 +1,13 @@
+#!/bin/sh
+
+docker-compose down
+docker volume rm todo-list-data
+docker volume create todo-list-data
+docker-compose up -d
+
+until docker-compose exec db pg_isready -U postgres -d todo_list; do
+  echo "Waiting for PostgreSQL to initialize..."
+  sleep 2
+done
+
+./gradlew flywayMigrate
