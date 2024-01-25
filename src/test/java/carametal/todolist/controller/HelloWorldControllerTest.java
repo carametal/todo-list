@@ -25,9 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @Sql(
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD,
     scripts = {"classpath:sql/truncate.sql", "classpath:sql/insert_testuser.sql"})
-// @Sql(
-//     executionPhase = ExecutionPhase.AFTER_TEST_METHOD,
-//     scripts = {})
 public class HelloWorldControllerTest extends AbstractDbTest {
 
   @Autowired private MockMvc mockMvc;

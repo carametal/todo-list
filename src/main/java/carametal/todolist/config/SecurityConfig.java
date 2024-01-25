@@ -1,25 +1,26 @@
 package carametal.todolist.config;
 
-import carametal.todolist.service.TodolistUserDetailsService;
+import carametal.todolist.repository.UserRepository;
+import carametal.todolist.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-  private final TodolistUserDetailsService todolistUserDetailsService;
+  private final UserRepository userRepository;
 
-  public SecurityConfig(TodolistUserDetailsService todolistUserDetailsService) {
-    this.todolistUserDetailsService = todolistUserDetailsService;
+  public SecurityConfig(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   @Bean
@@ -30,16 +31,16 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationProvider authenticationProvider() {
+  public AuthenticationProvider authenticationProvider(UserDetailsManager userDetailsManager) {
     var basicAuthenticationProvider = new BasicAuthenticationProvider();
-    basicAuthenticationProvider.setUserDetailsService(todolistUserDetailsService);
+    basicAuthenticationProvider.setUserDetailsService(userDetailsManager);
     basicAuthenticationProvider.setPasswordEncoder(passwordEncoder());
     return basicAuthenticationProvider;
   }
 
   @Bean
-  public UserDetailsService userDetailsService() {
-    return todolistUserDetailsService;
+  public UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
+    return new UserDetailsServiceImpl(userRepository, passwordEncoder);
   }
 
   @Bean
