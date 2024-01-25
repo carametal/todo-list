@@ -62,3 +62,11 @@ tasks.named('test') {
 	useJUnitPlatform()
 	systemProperty 'spring.profiles.active', 'test'
 }
+
+task insertTestData(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+	url = 'jdbc:postgresql://localhost:5432/todo_list'
+	user = 'postgres'
+	password = 'postgres'
+	locations = ['classpath:db/test_data']
+}
+
