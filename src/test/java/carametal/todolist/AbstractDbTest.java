@@ -1,8 +1,6 @@
 package carametal.todolist;
 
-import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -27,10 +25,5 @@ public abstract class AbstractDbTest {
 
   static {
     postgres.start();
-  }
-
-  @Test
-  void テスト用postgresコンテナが実行されている() {
-    assertTrue(postgres.isRunning());
   }
 }

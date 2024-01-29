@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.util.Assert;
 
 public class UserDetailsServiceImpl implements UserDetailsManager {
 
@@ -19,6 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsManager {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Assert.hasText(username, "引数\"username\"は1文字以上の英字/数字/記号である必要があります。");
     var user =
         userRepository
             .findByUsername(username)
@@ -31,8 +33,9 @@ public class UserDetailsServiceImpl implements UserDetailsManager {
   public void createUser(UserDetails userDetails) {
     if (userDetails instanceof User user) {
       userRepository.save(user);
+      return;
     }
-    throw new IllegalStateException("引数:userDetailsはUser型である必要があります。");
+    throw new IllegalStateException("引数:userDetailsはUser型である必要があります。:" + userDetails.getClass());
   }
 
   @Override

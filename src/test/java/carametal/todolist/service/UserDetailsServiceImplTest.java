@@ -1,18 +1,22 @@
 package carametal.todolist.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import carametal.todolist.AbstractDbTest;
 import carametal.todolist.entity.User;
 import carametal.todolist.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.junit.Test;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -24,7 +28,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @Transactional
 public class UserDetailsServiceImplTest extends AbstractDbTest {
 
-  private final UserDetailsServiceImpl userDetailsServiceImpl;
+  private UserDetailsServiceImpl userDetailsServiceImpl;
 
   @Autowired
   public UserDetailsServiceImplTest(
@@ -33,17 +37,37 @@ public class UserDetailsServiceImplTest extends AbstractDbTest {
   }
 
   @Nested
-  class loadUserByUsername {
+  class ユーザー名によるユーザー存在確認 {
     @ParameterizedTest
     @ValueSource(strings = {"testadmin", "testuser"})
     void DBに存在するusernameを渡すとUserDetailsオブジェクトを返す(String input) {
       var user = userDetailsServiceImpl.loadUserByUsername(input);
       assertEquals(user.getUsername(), input);
     }
+
+    @Test
+    void DBに存在しないusernameを渡すとUsernameNotFoundExceptionを投げる() {
+      assertThrows(
+          UsernameNotFoundException.class,
+          () -> {
+            userDetailsServiceImpl.loadUserByUsername("not-exists-user");
+          });
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "　"})
+    @Tag("learning")
+    void 不正な値を渡すとIllegalArgumentExceptionを投げる(String input) {
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            userDetailsServiceImpl.loadUserByUsername(input);
+          });
+    }
   }
 
   @Nested
-  class createUser {
+  class ユーザー登録 {
     @Test
     void 新規ユーザーを登録できる() {
       var user = new User();
@@ -60,7 +84,11 @@ public class UserDetailsServiceImplTest extends AbstractDbTest {
       var user = new User();
       user.setUsername("testuser");
       user.setPassword("password");
-      userDetailsServiceImpl.createUser(user);
+      assertThrows(
+          DataIntegrityViolationException.class,
+          () -> {
+            userDetailsServiceImpl.createUser(user);
+          });
     }
   }
 }
