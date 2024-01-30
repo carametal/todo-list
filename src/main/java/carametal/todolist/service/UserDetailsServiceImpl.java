@@ -31,11 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsManager {
 
   @Override
   public void createUser(UserDetails userDetails) {
-    if (userDetails instanceof User user) {
-      userRepository.save(user);
-      return;
-    }
-    throw new IllegalStateException("引数:userDetailsはUser型である必要があります。:" + userDetails.getClass());
+    Assert.isTrue(
+        userDetails instanceof User, "引数:userDetailsはUser型である必要があります。:" + userDetails.getClass());
+    userRepository.save((User) userDetails);
   }
 
   @Override
