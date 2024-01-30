@@ -1,6 +1,7 @@
 package carametal.todolist.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -88,6 +89,32 @@ public class UserDetailsServiceImplTest extends AbstractDbTest {
           DataIntegrityViolationException.class,
           () -> {
             userDetailsServiceImpl.createUser(user);
+          });
+    }
+  }
+
+  @Nested
+  class ユーザー削除 {
+    @Test
+    void ユーザーが削除されている() {
+      assertNotNull(userDetailsServiceImpl.loadUserByUsername("testuser"));
+      userDetailsServiceImpl.deleteUser("testuser");
+      assertThrows(
+          UsernameNotFoundException.class,
+          () -> {
+            userDetailsServiceImpl.loadUserByUsername("testuser");
+          });
+    }
+
+    void ユーザーが存在している場合() {}
+
+    @Test
+    @Tag("learning")
+    void 存在しないユーザー名を指定するとUsernameNotFoundExceptionを投げる() {
+      assertThrows(
+          UsernameNotFoundException.class,
+          () -> {
+            userDetailsServiceImpl.deleteUser("notExistsUser");
           });
     }
   }

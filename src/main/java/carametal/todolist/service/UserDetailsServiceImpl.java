@@ -46,8 +46,15 @@ public class UserDetailsServiceImpl implements UserDetailsManager {
 
   @Override
   public void deleteUser(String username) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
+    var user = userRepository.findByUsername(username);
+    if (user.isEmpty()) {
+      throw new UsernameNotFoundException("username=%sが見つかりませんでした。".formatted(username));
+    }
+    var u = user.get();
+    if (u == null) {
+      throw new IllegalStateException("不明なエラーです。存在すべきuserがnullになっています。");
+    }
+    userRepository.delete(u);
   }
 
   @Override

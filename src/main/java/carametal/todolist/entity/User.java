@@ -1,5 +1,6 @@
 package carametal.todolist.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class User implements UserDetails {
 
   private boolean enabled;
 
-  @OneToMany(mappedBy = "id")
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Authority> authorities;
 
   @Override
