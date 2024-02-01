@@ -1,8 +1,10 @@
 package carametal.todolist.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import carametal.todolist.AbstractDbTest;
@@ -106,8 +108,6 @@ public class UserDetailsServiceImplTest extends AbstractDbTest {
           });
     }
 
-    void ユーザーが存在している場合() {}
-
     @Test
     @Tag("learning")
     void 存在しないユーザー名を指定するとUsernameNotFoundExceptionを投げる() {
@@ -116,6 +116,19 @@ public class UserDetailsServiceImplTest extends AbstractDbTest {
           () -> {
             userDetailsServiceImpl.deleteUser("notExistsUser");
           });
+    }
+  }
+
+  @Nested
+  class ユーザー存在確認 {
+    @Test
+    void ユーザー名が存在する場合はtrueを返す() {
+      assertTrue(userDetailsServiceImpl.userExists("testuser"));
+    }
+
+    @Test
+    void ユーザー名が存在しない場合はfalseを返す() {
+      assertFalse(userDetailsServiceImpl.userExists("not-exists-user"));
     }
   }
 }
