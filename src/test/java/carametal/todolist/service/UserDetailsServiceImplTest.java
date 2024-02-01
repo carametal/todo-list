@@ -131,4 +131,42 @@ public class UserDetailsServiceImplTest extends AbstractDbTest {
       assertFalse(userDetailsServiceImpl.userExists("not-exists-user"));
     }
   }
+
+  @Nested
+  class ユーザー更新 {
+    @Test
+    void ユーザーを更新できる() {
+      var user = (User) userDetailsServiceImpl.loadUserByUsername("testuser");
+      user.setUsername("new-test-user");
+      userDetailsServiceImpl.updateUser(user);
+      var updatedUser = userDetailsServiceImpl.loadUserByUsername("new-test-user");
+      assertEquals("new-test-user", updatedUser.getUsername());
+    }
+
+    @Test
+    void ユーザーIDがnullだとIllegalArgumentExceptionを投げる() {
+      var user = new User();
+      user.setId(null);
+      user.setUsername("new-test-user");
+      user.setPassword("password");
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            userDetailsServiceImpl.updateUser(user);
+          });
+    }
+
+    @Test
+    void 存在しないユーザーIDを渡すとIllegalArgumentExceptionを投げる() {
+      var user = new User();
+      user.setId(99);
+      user.setUsername("new-test-user");
+      user.setPassword("password");
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            userDetailsServiceImpl.updateUser(user);
+          });
+    }
+  }
 }

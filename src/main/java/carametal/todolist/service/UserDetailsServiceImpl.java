@@ -37,9 +37,21 @@ public class UserDetailsServiceImpl implements UserDetailsManager {
   }
 
   @Override
-  public void updateUser(UserDetails user) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+  public void updateUser(UserDetails userDetails) {
+    if (userDetails instanceof User user) {
+      var userId = user.getId();
+      if (userId == null) {
+        throw new IllegalArgumentException("user.idがnullになっています。user.idは非Nullである必要があります。");
+      }
+      var userInRepository = userRepository.findById(userId);
+      if (userInRepository.isEmpty()) {
+        throw new IllegalArgumentException("リクエストされたユーザーIDは存在しません。ユーザーID:" + userId);
+      }
+      userInRepository.get().setUsername(user.getUsername());
+      return;
+    }
+
+    throw new IllegalStateException("引数:userDetailsはUser型である必要があります。:" + userDetails.getClass());
   }
 
   @Override
